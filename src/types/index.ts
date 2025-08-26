@@ -6,6 +6,25 @@ export type OHLC = {
   close: number
 }
 
+// types/index.ts
+export type Kline = [
+  openTimeMs: number, // k[0] ms
+  open: string,       // k[1]
+  high: string,       // k[2]
+  low: string,        // k[3]
+  close: string,      // k[4]
+  ...rest: unknown[]  // k[5]~
+];
+
+export type DBRow = {
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+};
+
+
 export interface BTCData {
   timestamp: number
   open: number
