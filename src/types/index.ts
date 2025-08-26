@@ -1,3 +1,4 @@
+// types/index.ts
 export type OHLC = {
   time: number
   open: number
@@ -6,14 +7,13 @@ export type OHLC = {
   close: number
 }
 
-// types/index.ts
 export type Kline = [
-  openTimeMs: number, // k[0] ms
-  open: string,       // k[1]
-  high: string,       // k[2]
-  low: string,        // k[3]
-  close: string,      // k[4]
-  ...rest: unknown[]  // k[5]~
+  openTimeMs: number,
+  open: string,
+  high: string,
+  low: string,
+  close: string,
+  ...rest: unknown[]
 ];
 
 export type DBRow = {

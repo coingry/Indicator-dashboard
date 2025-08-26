@@ -1,4 +1,4 @@
-// components/ResolutionPicker.tsx
+// components/chart/ResolutionPicker.tsx
 "use client";
 
 import { CANDLE_LABELS, RESOLUTION_ORDER} from '@/utils'
@@ -17,7 +17,7 @@ export default function ResolutionPicker({ value, onChange }: Props) {
           key={r}
           onClick={() => onChange(r)}
           className={[
-            "px-3 py-1 rounded text-sm transition",
+            "px-3 py-1 rounded text-sm transition cursor-pointer",
             value === r
               ? "bg-blue-600 text-white shadow"
               : "bg-gray-200 hover:bg-gray-300 text-gray-800",

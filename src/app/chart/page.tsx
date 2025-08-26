@@ -8,8 +8,8 @@ import {
   IndicatorsPanel,
   LogPanel,
   SettingsPanel,
+  ResolutionPicker
 } from "@/components";
-import ResolutionPicker from "@/components/ResolutionPicker";
 import { Resolution } from "@/types";
 
 const queryClient = new QueryClient();
@@ -38,7 +38,7 @@ export default function ChartPage() {
             </div>
           </div>
 
-          <div className="flex flex-1 basis-[30%] gap-6">
+          {/* <div className="flex flex-1 basis-[30%] gap-6">
             <div className="flex-1 bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 📝 활동 로그
@@ -51,7 +51,7 @@ export default function ChartPage() {
               </h2>
               <SettingsPanel />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </QueryClientProvider>

@@ -7,7 +7,6 @@ import type {
 } from "lightweight-charts";
 import { formatKST } from "@/utils/time";
 
-/** 차트 공통 옵션 (필요시 override로 덮어쓰기 가능) */
 export function getChartOptions(
   height = 450,
   overrides: DeepPartial<ChartOptions> = {}
@@ -37,7 +36,7 @@ export function getChartOptions(
       },
     },
   };
-  // 얕은 머지 (필요하면 lodash.merge 같은 걸로 깊은 병합도 가능)
+
   return { ...base, ...overrides };
 }
 

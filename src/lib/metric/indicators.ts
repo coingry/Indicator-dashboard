@@ -1,3 +1,4 @@
+// lib/indicators.ts
 import { BTCData, IndicatorData } from '@/types'
 
 // OI 관련 상수 (파이썬 코드와 동일)
