@@ -1,103 +1,67 @@
-import Image from "next/image";
+// app/page.tsx
+'use client'
 
-export default function Home() {
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+export default function Dashboard() {
+  const [initStatus, setInitStatus] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
+  const handleInitClick = async () => {
+    setLoading(true)
+    setInitStatus('📡 6개월치 데이터 수집 중... 잠시만 기다려주세요.')
+    try {
+      const res = await fetch('/api/init')
+      const json = await res.json()
+      if (json.success) {
+        setInitStatus(`✅ ${json.inserted}건 데이터가 삽입되었습니다.`)
+      } else {
+        setInitStatus(`❌ 에러 발생: ${json.error}`)
+      }
+    } catch (e) {
+      setInitStatus(`❌ 예기치 못한 오류: ${String(e)}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-6">
+          📊 BTC 지표 관리자 대시보드
+        </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="space-y-4">
+          <button
+            onClick={handleInitClick}
+            disabled={loading}
+            className="w-full border-1 border-blue-500 text-blue-500 bg-white hover:bg-blue-500 hover:text-white hover:font-semibold py-2 px-4 rounded"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            ① 6개월치 데이터 가져오기
+          </button>
+
+          <button
+            onClick={() => alert('실시간 수집은 아직 구현되지 않았습니다.')}
+            className="w-full border-1 border-yellow-600 text-yellow-600 bg-white hover:bg-yellow-600 hover:text-white hover:font-semibold py-2 px-4 rounded"
           >
-            Read our docs
-          </a>
+            ② 실시간 데이터 수집 시작 (준비 중)
+          </button>
+
+          <button
+            onClick={() => router.push('/chart')}
+            className="w-full border-1 border-green-700 text-green-700 bg-white hover:bg-green-700 hover:text-white hover:font-semibold py-2 px-4 rounded"
+          >
+            ③ 지표 페이지로 이동
+          </button>
+
+          {initStatus && (
+            <p className="text-sm text-center text-gray-700 mt-2 whitespace-pre-line">{initStatus}</p>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+    </main>
+  )
 }
