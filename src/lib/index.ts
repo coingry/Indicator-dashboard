@@ -1,6 +1,4 @@
 export * from './metric/indicatorFields'
 export * from './metric/indicators'
 export * from './api/btc'
-export * from './socket/socket'
 export * from './binance'
-export * from './database'

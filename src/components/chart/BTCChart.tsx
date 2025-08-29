@@ -2,19 +2,14 @@
 "use client";
 
 import React, { useEffect, useRef, memo } from "react";
-type Props = {
-  symbol?: string;
-  interval?: string;
-  range?: string;
-  theme?: "light" | "dark";
-};
+import type { BTCChartProps } from "@/types/chart";
 
 function BTCChart({
   symbol = "BINANCE:BTCUSDT",
   interval = "1",
   range = "1D",
   theme = "light",
-}: Props) {
+}: BTCChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -66,7 +61,7 @@ function BTCChart({
   return (
     <div
       ref={containerRef}
-      className="tradingview-widget-container w-full h-full"
+      className="tradingview-widget-container w-full h-full min-h-[600px]"
     />
   );
 }

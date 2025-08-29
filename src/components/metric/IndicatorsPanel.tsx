@@ -6,10 +6,8 @@ import type { IndicatorData } from "@/types";
 import { MetricCard } from "@/components";
 import { DATE_SELECT_OPTIONS } from "@/utils";
 import { EXTENDED_FIELDS } from "@/lib";
-import { useLivePriceFromKline } from "@/hooks";
 
 export default function IndicatorsPanel() {
-  const price = useLivePriceFromKline();
   const [selectedPeriod, setSelectedPeriod] = useState(30);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);

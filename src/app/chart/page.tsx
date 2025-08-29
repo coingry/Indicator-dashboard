@@ -15,12 +15,12 @@ export default function ChartPage() {
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-10xl mx-auto flex flex-col gap-6">
-          <div className="flex basis-[70%] gap-6 h-[600]">
-            <div className="flex-1 bg-white rounded-lg shadow-lg p-6">
+          <div className="flex basis-[75%] gap-2 h-[600]">
+            <div className="flex-1 bg-white shadow-lg p-1">
               <BTCChart />
             </div>
 
-            <div className="w-[30%] bg-white rounded-lg shadow-lg p-6">
+            <div className="w-[25%] bg-white shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 지표 정보
               </h2>
