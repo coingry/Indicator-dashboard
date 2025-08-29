@@ -126,14 +126,6 @@ export default function IndicatorsPanel() {
         )}
       </div>
 
-      <div className="text-3xl font-bold text-center text-blue-900 tabular-nums min-h-10 m-0 p-1 border-2 mb-3">
-        {mounted && price != null ? (
-          <>$ {price.toLocaleString()}</>
-        ) : (
-          <span className="text-gray-500">가격 수신 중...</span>
-        )}
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {fields.map((f) => {
           const val = data ? f.getValue(data) : null;

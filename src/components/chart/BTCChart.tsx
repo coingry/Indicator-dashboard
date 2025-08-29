@@ -1,170 +1,74 @@
 // components/chart/BTCChart.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import {
-  createChart,
-  type ISeriesApi,
-  type UTCTimestamp,
-} from "lightweight-charts";
-import type { Resolution, BTCRow } from "@/types";
-import { fetchBTCData, fetchBTCIncremental } from "@/lib";
-import { useBTCRealtimeSocket } from "@/hooks";
-import { useQuery } from "@tanstack/react-query";
-import {
-  getChartOptions,
-  candleSeriesOptions,
-  initAggregateMap,
-  upsertAggregateTick,
-  aggregateToSortedArray,
-  toCandles,
-  msToNextMinute,
-} from "@/utils";
+import React, { useEffect, useRef, memo } from "react";
+type Props = {
+  symbol?: string;
+  interval?: string;
+  range?: string;
+  theme?: "light" | "dark";
+};
 
-export default function BTCChart({
-  resolution = "1m",
-}: {
-  resolution?: Resolution;
-}) {
-  const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<ReturnType<typeof createChart> | null>(null);
-  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+function BTCChart({
+  symbol = "BINANCE:BTCUSDT",
+  interval = "1",
+  range = "1D",
+  theme = "light",
+}: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const rawRef = useRef<BTCRow[]>([]);
-  const aggMapRef = useRef<Map<number, BTCRow>>(new Map());
-  const resolutionRef = useRef<Resolution>(resolution);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-  const [loading, setLoading] = useState(true);
+    el.replaceChildren();
 
-  const {
-    data: rows = [],
-    isFetched,
-    isLoading: isQueryLoading,
-  } = useQuery({
-    queryKey: ["btc", "full", 180],
-    queryFn: () => fetchBTCData(180),
-  });
-
-  useBTCRealtimeSocket((tick) => {
-    const last = rawRef.current.at(-1);
-    if (!last || tick.timestamp < last.timestamp) return;
-
-    const next = [...rawRef.current];
-    if (tick.timestamp === last.timestamp) next[next.length - 1] = tick;
-    else next.push(tick);
-    rawRef.current = next;
-
-    upsertAggregateTick(aggMapRef.current, tick, resolutionRef.current);
-
-    const latest = Array.from(aggMapRef.current.values()).reduce((a, b) =>
-      a.timestamp > b.timestamp ? a : b
+    const script = document.createElement("script");
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.type = "text/javascript";
+    script.async = true;
+    script.innerHTML = JSON.stringify(
+      {
+        allow_symbol_change: true,
+        details: true,
+        hide_side_toolbar: false,
+        hide_top_toolbar: false,
+        hide_legend: false,
+        hide_volume: false,
+        interval,
+        locale: "kr",
+        save_image: true,
+        style: "1",
+        symbol,
+        theme,
+        timezone: "Asia/Seoul",
+        backgroundColor: "#ffffff",
+        gridColor: "rgba(46, 46, 46, 0.06)",
+        watchlist: [],
+        withdateranges: true,
+        range,
+        compareSymbols: [],
+        studies: [],
+        autosize: true,
+      },
+      null,
+      2
     );
 
-    if (latest && seriesRef.current) {
-      seriesRef.current.update({
-        time: latest.timestamp as UTCTimestamp,
-        open: latest.open,
-        high: latest.high,
-        low: latest.low,
-        close: latest.close,
-      });
-    }
-  });
-
-  useEffect(() => {
-    if (!chartContainerRef.current || !isFetched) return;
-
-    const el = chartContainerRef.current;
-    const chart = createChart(el, getChartOptions());
-    chartRef.current = chart;
-
-    const series = chart.addCandlestickSeries(candleSeriesOptions);
-    seriesRef.current = series;
-
-    rawRef.current = rows;
-    aggMapRef.current = initAggregateMap(rows, resolutionRef.current);
-    const initialAgg = aggregateToSortedArray(aggMapRef.current);
-    const initialCandles = toCandles(initialAgg);
-    series.setData(initialCandles);
-    setLoading(false);
-
-    const startPolling = async () => {
-      try {
-        const lastTs = rawRef.current.at(-1)?.timestamp;
-        if (!lastTs) return;
-
-        const inc = await fetchBTCIncremental(lastTs, 300);
-        if (!inc?.length) return;
-
-        const map = aggMapRef.current;
-        for (const t of inc) upsertAggregateTick(map, t, resolutionRef.current);
-        rawRef.current = mergeUniqueByTs(rawRef.current, inc);
-        const agg = aggregateToSortedArray(map);
-        series.setData(toCandles(agg));
-      } catch (err) {
-        console.error("증분 데이터 로딩 실패:", err);
-      }
-    };
-
-    const t = setTimeout(() => {
-      startPolling();
-      pollRef.current = setInterval(startPolling, 60_000);
-    }, msToNextMinute());
-
-    chart.applyOptions({
-      width: el.clientWidth,
-      height: el.clientHeight,
-    });
-    const lastWRef = { current: 0 };
-    const ro = new ResizeObserver(([entry]) => {
-      const w = Math.floor(entry.contentRect.width);
-      if (!chartRef.current) return;
-      if (w > 0 && w !== lastWRef.current) {
-        lastWRef.current = w;
-        chartRef.current.applyOptions({ width: w });
-      }
-    });
-    ro.observe(el);
+    el.appendChild(script);
 
     return () => {
-      clearTimeout(t);
-      if (pollRef.current) clearInterval(pollRef.current);
-      ro.disconnect();
-      chart.remove();
-      chartRef.current = null;
-      seriesRef.current = null;
+      el.replaceChildren();
     };
-  }, [isFetched, rows]);
-
-  useEffect(() => {
-    resolutionRef.current = resolution;
-    if (!seriesRef.current) return;
-
-    aggMapRef.current = initAggregateMap(rawRef.current, resolution);
-    const agg = aggregateToSortedArray(aggMapRef.current);
-    seriesRef.current.setData(toCandles(agg));
-  }, [resolution]);
+  }, [symbol, interval, range, theme]);
 
   return (
     <div
-      ref={chartContainerRef}
-      // className="relative w-full h-full min-h-[450px]"
-      className="relative w-full h-[480px] md:h-[560px]"
-    >
-      {(loading || isQueryLoading) && (
-        <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700" />
-        </div>
-      )}
-    </div>
+      ref={containerRef}
+      className="tradingview-widget-container w-full h-full"
+    />
   );
 }
 
-function mergeUniqueByTs(base: BTCRow[], inc: BTCRow[]) {
-  if (!inc?.length) return base;
-  const m = new Map<number, BTCRow>();
-  for (const r of base) m.set(r.timestamp, r);
-  for (const r of inc) m.set(r.timestamp, r);
-  return Array.from(m.values()).sort((a, b) => a.timestamp - b.timestamp);
-}
+export default memo(BTCChart);
