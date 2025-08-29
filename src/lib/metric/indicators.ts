@@ -14,30 +14,6 @@ export const RSI_OVERBOUGHT = 60.0
 export const RSI_OVERSOLD = 40.0
 
 /**
- * 로그 수익률 기반 표준편차(σ) 계산
- * 파이썬 코드의 compute_sigma 함수와 동일한 로직
- */
-export function computeSigma(data: BTCData[]): number {
-  if (data.length < 2) {
-    throw new Error('표준편차 계산을 위해서는 최소 2개 이상의 데이터가 필요합니다.')
-  }
-
-  // 로그 수익률 계산: ln(close_price / previous_close_price)
-  const logReturns: number[] = []
-  for (let i = 1; i < data.length; i++) {
-    const logReturn = Math.log(data[i].close / data[i - 1].close)
-    logReturns.push(logReturn)
-  }
-
-  // 표준편차 계산
-  const mean = logReturns.reduce((sum, ret) => sum + ret, 0) / logReturns.length
-  const variance = logReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / logReturns.length
-  const sigma = Math.sqrt(variance)
-
-  return sigma
-}
-
-/**
  * RSI 계산 (Wilder 방식)
  * 파이썬 코드의 _rsi 함수와 동일한 로직
  */
