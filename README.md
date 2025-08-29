@@ -3,7 +3,7 @@
 Next.js 15와 Supabase를 기반으로 한 BTC(비트코인) 지표 관리 웹페이지입니다.
 
 ## 🚀 주요 기능
-
+(추후 변경 가능)
 - **실시간 BTC 차트**: lightweight-charts를 사용한 1분봉 차트
 - **지표 계산**: σ(표준편차), ±1σ 밴드 등 통계 지표
 - **기간별 분석**: 30일, 60일, 90일 기간 선택 가능
@@ -19,6 +19,7 @@ Next.js 15와 Supabase를 기반으로 한 BTC(비트코인) 지표 관리 웹�
 - **백엔드**: Next.js API Routes
 - **데이터베이스**: Supabase (PostgreSQL)
 - **API**: Binance Futures API
+- **소켓**: Socket.IO (실시간 데이터 스트리밍)
 
 ## 📋 설치 및 설정
 
@@ -34,16 +35,21 @@ npm install
 
 ```env
 # Binance API 설정
-NEXT_PUBLIC_BINANCE_API_KEY=your_binance_api_key_here
-NEXT_PUBLIC_BINANCE_SECRET_KEY=your_binance_secret_key_here
+NEXT_PUBLIC_BINANCE_API_KEY=
+NEXT_PUBLIC_BINANCE_SECRET_KEY=
+# BINANCE_STREAM_URL=
 
 # Supabase 설정
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_TABLE_NAME=
+NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=
 
 # 기타 설정
-NEXT_PUBLIC_SYMBOL=BTCUSDT
-NEXT_PUBLIC_FAPI_BASE=https://fapi.binance.com
+NEXT_PUBLIC_BINANCE_STREAM_HOST=
+NEXT_PUBLIC_SYMBOL=
+NEXT_PUBLIC_FAPI_BASE=
+NEXT_PUBLIC_SOCKET_URL=
 ```
 
 ### 3. Supabase 설정
@@ -55,84 +61,49 @@ NEXT_PUBLIC_FAPI_BASE=https://fapi.binance.com
 ### 4. 개발 서버 실행
 
 ```bash
-npm run dev
+npm run dev:all
 ```
 
 ## 🏗️ 프로젝트 구조
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── api/               # API 라우트
-│   │   └── btc-data/      # BTC 데이터 API
-│   ├── layout.tsx         # 루트 레이아웃
-│   └── page.tsx           # 메인 대시보드
-├── components/             # React 컴포넌트
-│   ├── BTCChart.tsx       # BTC 차트
-│   ├── IndicatorsPanel.tsx # 지표 패널
-│   ├── LogPanel.tsx       # 로그 패널
-│   └── SettingsPanel.tsx  # 설정 패널
-├── lib/                    # 유틸리티
-│   └── supabase.ts        # Supabase 클라이언트
-└── types/                  # TypeScript 타입 정의
-    └── index.ts
+├── app/
+│   ├── api/                      # API 라우트
+│   │   └── btc-data/             # BTC 데이터 API
+|   |   └── init/                 # 초기 데이터 API
+│   ├── chart/                    # 차트 메인 대시보드 페이지
+│   ├── layout.tsx                # 루트 레이아웃
+│   └── page.tsx                  # 항목 선택 페이지
+├── components/
+│   ├── chart/                    # chart 컴포넌트 폴더
+│   │   └── BTCchart.tsx          # BTC 차트 패널
+|   |   └── ResolutionPicker.tsx
+│   ├── metric/                   # 지표 컴포넌트 폴더
+│   │   └── IndicatorsPanel.tsx
+|   |   └── MetricCard.tsx
+│   ├── LogPanel.tsx              # 로그 패널
+│   └── SettingsPanel.tsx         # 설정 패널
+├── hooks/                        # 훅
+│   ├── useBTCWebSocket.ts
+│   └── useLivePrice.ts
+├── lib/                          # 라이브러리 폴더
+│   ├── api/                    
+│   ├── metric/
+│   ├── socket/
+│   └── supabase/
+├── utils/                        # 유틸함수 폴더
+│   ├── aggregation.ts                   
+│   ├── chartOptions.ts
+│   ├── config.ts
+│   └── formatter.ts
+│   └── index.ts
+│   └── time.ts
+├── types/                        # TypeScript 타입 정의
+│    └── index.ts
+│    └── indicators.ts
+server/                           # 실시간 웹소켓 서버
+├── socket-server.ts
+ingest-worker/
+     └── binance-worker.ts        # 실시간 바이낸스 데이터
 ```
-
-## 📊 지표 계산 방법
-
-### σ (표준편차) 계산
-
-1. **로그 수익률 계산**: `ln(close_price / previous_close_price)`
-2. **평균 계산**: 모든 로그 수익률의 평균
-3. **분산 계산**: 각 로그 수익률과 평균의 차이 제곱의 평균
-4. **표준편차**: 분산의 제곱근
-
-### ±1σ 밴드
-
-- **상단 밴드**: `현재가 + (현재가 × σ)`
-- **하단 밴드**: `현재가 - (현재가 × σ)`
-
-## 🔧 API 엔드포인트
-
-### GET /api/btc-data
-
-BTC 데이터와 지표를 가져오는 API
-
-**쿼리 파라미터:**
-- `period`: 계산 기간 (30, 60, 90일)
-
-**응답:**
-```json
-{
-  "success": true,
-  "data": {
-    "chartData": [...],
-    "indicators": {
-      "currentPrice": 50000,
-      "sigma": 0.0235,
-      "sigmaAbsolute": 1175,
-      "upperBand": 51175,
-      "lowerBand": 48825,
-      "period": 30,
-      "lastUpdated": "2025-01-21T00:00:00.000Z"
-    }
-  }
-}
-```
-
-## 🚧 향후 개발 계획
-
-- [ ] Binance API 실제 연동
-- [ ] 실시간 데이터 스트리밍
-- [ ] 알림 시스템 구현
-- [ ] 사용자 인증 및 권한 관리
-- [ ] 지표 히스토리 차트
-- [ ] 백테스팅 기능
-
-## 📝 라이선스
-
-MIT License
-
-## 🤝 기여
-
-이슈나 풀 리퀘스트를 통해 기여해주세요!
