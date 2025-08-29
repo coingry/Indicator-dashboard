@@ -2,23 +2,12 @@
 import type { FieldSpec } from "@/types/indicators";
 import { fCurrency, fPercent, fFixed } from "@/utils/formatter";
 
-// 기본 세트(현재가 + σ만)
-export const BASIC_FIELDS: FieldSpec[] = [
-  {
-    key: "currentPrice",
-    label: "현재가",
-    getValue: (d) => fCurrency(d.currentPrice),
-  },
+export const EXTENDED_FIELDS: FieldSpec[] = [
   {
     key: "sigma",
     label: "σ (표준편차)",
     getValue: (d) => (d.sigma != null ? `${d.sigma.toFixed(4)}%` : null),
   },
-];
-
-// 확장 세트(점차 추가)
-export const EXTENDED_FIELDS: FieldSpec[] = [
-  ...BASIC_FIELDS,
   {
     key: "sigmaAbsolute",
     label: "σ 절대폭",

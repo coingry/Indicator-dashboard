@@ -4,9 +4,8 @@ import WebSocket from "ws";
 import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
 
-console.log("👋 [Start] worker init");
+console.log("[Start] worker init");
 
-// ===== env =====
 const SUPABASE_URL = process.env.SUPABASE_URL!;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const RAW_SYMBOL = (process.env.SYMBOL || "BTC-USDT").toUpperCase();
@@ -126,7 +125,7 @@ function connect() {
     try {
       const msg = JSON.parse(raw.toString());
       const k = msg?.k;
-      if (!k || !k.x) return; // 종가 확정된 캔들만 처리
+      if (!k || !k.x) return;
 
       const row: KlineRow = {
         timestamp: Math.floor(k.t / 1000),
@@ -161,7 +160,6 @@ function connect() {
   });
 }
 
-// ==== Start ====
 (async () => {
   await fillMissingFromLastTimestamp();
   connect();

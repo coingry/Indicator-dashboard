@@ -5,12 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import type { IndicatorData } from "@/types";
 import { MetricCard } from "@/components";
 import { DATE_SELECT_OPTIONS } from "@/utils";
-import { BASIC_FIELDS } from "@/lib";
+import { EXTENDED_FIELDS } from "@/lib";
+import { useLivePriceFromKline } from "@/hooks";
 
 export default function IndicatorsPanel() {
+  const price = useLivePriceFromKline();
   const [selectedPeriod, setSelectedPeriod] = useState(30);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => setMounted(true), []);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["btc-indicators", selectedPeriod],
@@ -40,7 +44,7 @@ export default function IndicatorsPanel() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
 
-  const fields = BASIC_FIELDS;
+  const fields = EXTENDED_FIELDS;
 
   if (isLoading) {
     return (
@@ -77,7 +81,7 @@ export default function IndicatorsPanel() {
               onClick={() => setOpen((v) => !v)}
               aria-haspopup="listbox"
               aria-expanded={open}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-20 text-left"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-15 text-left"
             >
               {getLabelByValue(selectedPeriod)}
             </button>
@@ -119,6 +123,14 @@ export default function IndicatorsPanel() {
             <p>마지막 업데이트</p>
             {new Date(data.lastUpdated).toLocaleString("ko-KR")}
           </div>
+        )}
+      </div>
+
+      <div className="text-3xl font-bold text-center text-blue-900 tabular-nums min-h-10 m-0 p-1 border-2 mb-3">
+        {mounted && price != null ? (
+          <>$ {price.toLocaleString()}</>
+        ) : (
+          <span className="text-gray-500">가격 수신 중...</span>
         )}
       </div>
 

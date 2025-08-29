@@ -43,15 +43,15 @@ export async function GET() {
 
       const { error } = await supabase
         .from("btc_chart_data")
-        .upsert(rows, { onConflict: "timestamp" }); // UNIQUE(timestamp) 필요
+        .upsert(rows, { onConflict: "timestamp" });
       if (error) throw error;
 
       inserted += rows.length;
 
       const lastOpenMs = klines[klines.length - 1][0];
-      fromMs = lastOpenMs + ONE_MIN_MS; // 다음 청크로 전진
+      fromMs = lastOpenMs + ONE_MIN_MS;
 
-      await new Promise((r) => setTimeout(r, 120)); // rate limit 완화
+      await new Promise((r) => setTimeout(r, 120));
     }
 
     return NextResponse.json(
