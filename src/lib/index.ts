@@ -1,6 +1,7 @@
 // 지표 관련 함수들
 export * from './metric/indicatorFields'
 export * from './metric/indicators'
+export * from './metric/indicatorRegistry'
 
 // 지표 계산 함수들
 export * from './metric/sigma'

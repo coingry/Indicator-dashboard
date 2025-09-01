@@ -16,8 +16,33 @@ export const RESOLUTION_TO_SECONDS: Record<string, number> = {
 };
 
 export const DEFAULT_RESOLUTION = "1m";
+export const DEFAULT_PERIOD = "30";
 export const ALLOWED_RESOLUTIONS = Object.keys(RESOLUTION_TO_SECONDS);
 
 export const RSI_PERIOD = 14;
 export const RSI_OVERBOUGHT = 60.0;
 export const RSI_OVERSOLD  = 40.0;
+
+// 지표별 설정 타입
+export type IndicatorConfigs = Partial<{
+  sigma: {
+    periodDays: number;
+    resolution: string;
+  };
+  rsi: {
+    resolution: string;
+    period: number;
+    overbought: number;
+    oversold: number;
+  };
+}>;
+
+export const DEFAULT_CONFIGS: IndicatorConfigs = {
+  sigma: { periodDays: 30, resolution: DEFAULT_RESOLUTION },
+  rsi: {
+    resolution: DEFAULT_RESOLUTION,
+    period: RSI_PERIOD,
+    overbought: RSI_OVERBOUGHT,
+    oversold: RSI_OVERSOLD,
+  },
+};

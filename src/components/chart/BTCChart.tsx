@@ -36,7 +36,7 @@ function BTCChart({
         locale: "kr",
         save_image: true,
         style: "1",
-        symbol: "",
+        symbol,
         theme,
         timezone: "Asia/Seoul",
         backgroundColor: "#ffffff",
