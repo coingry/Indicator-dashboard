@@ -1,4 +1,4 @@
-// config.ts
+// utils/config.ts
 
 export const DATE_SELECT_OPTIONS = [
   { label: '30일', value: 30 },

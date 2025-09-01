@@ -22,7 +22,7 @@ export function useBtcIndicators(period: number, reso: string) {
         lastUpdated: new Date(indicators.lastUpdated).getTime(),
       };
     },
-    // 자동 갱신을 쓰려면 주석 해제 (예: 60초)
+    // 자동 갱신
     // refetchInterval: 60000,
   });
 }
