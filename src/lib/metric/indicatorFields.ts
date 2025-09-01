@@ -1,12 +1,29 @@
 // lib/indicatorFields.ts
-import type { FieldSpec } from "@/types/indicators";
+import type { FieldSpec } from "@/types";
+import { RSI_OVERBOUGHT, RSI_OVERSOLD } from "@/utils";
 import { fCurrency, fPercent, fFixed } from "@/utils/formatter";
+
+const rsiState = (v: number) =>
+  v >= RSI_OVERBOUGHT ? "과매수" : v <= RSI_OVERSOLD ? "과매도" : "중립";
+
+const rsiBadge = (state: string) =>
+  state === "과매수" ? "🔴" : state === "과매도" ? "🔵" : "⚪️";
 
 export const EXTENDED_FIELDS: FieldSpec[] = [
   {
     key: "sigma",
     label: "σ (표준편차)",
     getValue: (d) => (d.sigma != null ? `${d.sigma.toFixed(4)}%` : null),
+  },
+  {
+    key: "rsi",
+    label: "RSI (14)",
+    getValue: (d) => (d.rsi == null ? null : fFixed(d.rsi, 1)),
+    getSub: (d) => {
+      if (d.rsi == null) return undefined;
+      const state = rsiState(d.rsi);
+      return `${rsiBadge(state)} ${state}`;
+    },
   },
   // {
   //   key: "sigmaAbsolute",
@@ -25,18 +42,6 @@ export const EXTENDED_FIELDS: FieldSpec[] = [
   //   getValue: (d) => fCurrency(d.lowerBand),
   // },
   // {
-  //   key: "rsi",
-  //   label: "RSI (14)",
-  //   getValue: (d) => (d.rsi == null ? null : fFixed(d.rsi, 1)),
-  //   getSub: (d) =>
-  //     d.rsi == null
-  //       ? undefined
-  //       : d.rsi >= 60
-  //       ? "과매수"
-  //       : d.rsi <= 40
-  //       ? "과매도"
-  //       : "중립",
-  // },
   // {
   //   key: "position",
   //   label: "포지션 분석",

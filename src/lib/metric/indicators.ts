@@ -8,43 +8,6 @@ export const OI_OPEN_STRONG = 0.80
 export const OI_CLOSE_STRONG = -0.50
 export const NEAR_BAND = 0.3
 
-// RSI 설정
-export const RSI_PERIOD = 14
-export const RSI_OVERBOUGHT = 60.0
-export const RSI_OVERSOLD = 40.0
-
-/**
- * RSI 계산 (Wilder 방식)
- * 파이썬 코드의 _rsi 함수와 동일한 로직
- */
-export function calculateRSI(data: BTCData[], period: number = RSI_PERIOD): number | null {
-  if (data.length < period + 1) {
-    return null
-  }
-
-  const prices = data.map(d => d.close)
-  const deltas = prices.slice(1).map((price, i) => price - prices[i])
-  
-  const gains = deltas.map(d => d > 0 ? d : 0)
-  const losses = deltas.map(d => d < 0 ? -d : 0)
-
-  // EWM으로 평균 계산 (Wilder 방식)
-  let avgGain = gains.slice(0, period).reduce((sum, gain) => sum + gain, 0) / period
-  let avgLoss = losses.slice(0, period).reduce((sum, loss) => sum + loss, 0) / period
-
-  for (let i = period; i < deltas.length; i++) {
-    avgGain = (avgGain * (period - 1) + gains[i]) / period
-    avgLoss = (avgLoss * (period - 1) + losses[i]) / period
-  }
-
-  if (avgLoss === 0) return 100
-
-  const rs = avgGain / avgLoss
-  const rsi = 100 - (100 / (1 + rs))
-
-  return rsi
-}
-
 /**
  * σ 기반 지표 계산
  * 파이썬 코드의 check_sigma 함수와 동일한 로직

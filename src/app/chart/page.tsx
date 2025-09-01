@@ -6,8 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BTCChart, IndicatorsPanel, LogPanel,SettingsPanel } from "@/components";
 import { useBtcIndicators } from "@/hooks/useBtcIndicators";
 
-const queryClient = new QueryClient();
-
 function ChartContent() {
   const [uiPeriod, setUiPeriod] = useState(30);
   const [uiReso, setUiReso] = useState("1m");
@@ -27,9 +25,8 @@ function ChartContent() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-10xl mx-auto flex flex-col gap-6">
+        <div className="w-full mx-auto flex flex-col gap-6">
           <div className="flex basis-[75%] gap-2 h-[600px]">
             <div className="flex-1 bg-white shadow-lg p-1">
               <BTCChart />
@@ -92,11 +89,11 @@ function ChartContent() {
 
         </div>
       </div>
-    </QueryClientProvider>
   );
 }
 
 export default function ChartPage() {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
       <ChartContent />

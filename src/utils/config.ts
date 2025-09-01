@@ -17,3 +17,7 @@ export const RESOLUTION_TO_SECONDS: Record<string, number> = {
 
 export const DEFAULT_RESOLUTION = "1m";
 export const ALLOWED_RESOLUTIONS = Object.keys(RESOLUTION_TO_SECONDS);
+
+export const RSI_PERIOD = 14;
+export const RSI_OVERBOUGHT = 60.0;
+export const RSI_OVERSOLD  = 40.0;

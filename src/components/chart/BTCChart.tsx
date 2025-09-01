@@ -26,6 +26,7 @@ function BTCChart({
     script.innerHTML = JSON.stringify(
       {
         allow_symbol_change: true,
+        calendar: false,
         details: true,
         hide_side_toolbar: false,
         hide_top_toolbar: false,
@@ -35,7 +36,7 @@ function BTCChart({
         locale: "kr",
         save_image: true,
         style: "1",
-        symbol,
+        symbol: "",
         theme,
         timezone: "Asia/Seoul",
         backgroundColor: "#ffffff",

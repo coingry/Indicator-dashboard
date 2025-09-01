@@ -5,9 +5,10 @@ import {
   calculateIndicators,
   computeSigma,
   aggregateToResolution,
-  fetchRangeBTCData
+  fetchRangeBTCData,
+  calculateRSI,
 } from "@/lib";
-import { RESOLUTION_TO_SECONDS, DEFAULT_RESOLUTION } from "@/utils";
+import { RESOLUTION_TO_SECONDS, DEFAULT_RESOLUTION, RSI_PERIOD } from "@/utils";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,13 +33,17 @@ export async function GET(request: NextRequest) {
     const processedData =
       resolution === "1m" ? rawData : aggregateToResolution(rawData, interval);
 
+    // 표준편차
     const sigma = computeSigma(processedData);
-    const indicators = calculateIndicators(processedData, periodDays, sigma);
+    // rsi
+    const rsi = calculateRSI(processedData, RSI_PERIOD);
 
+    const indicators = calculateIndicators(processedData, periodDays, sigma);
+    
     return NextResponse.json(
       {
         success: true,
-        data: { indicators },
+        data: { indicators: { ...indicators, rsi } },
       },
       { headers: { "Cache-Control": "no-store" } }
     );

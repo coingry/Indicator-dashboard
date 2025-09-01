@@ -5,4 +5,3 @@ export { default as MetricCard } from "./metric/MetricCard";
 
 export { default as LogPanel } from "./LogPanel";
 export { default as SettingsPanel } from "./SettingsPanel";
-export { default as LoadingSpinner } from "./LoadingSpinner";

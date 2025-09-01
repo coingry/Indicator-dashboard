@@ -1,3 +1,4 @@
+// types/indicator.ts
 import type { IndicatorData } from "@/types";
 export type FieldKey =
   | "currentPrice"
