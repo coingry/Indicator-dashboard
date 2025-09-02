@@ -3,9 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BTCChart, IndicatorsPanel } from "@/components";
+import { BTCChart, IndicatorsPanel, IndicatorSettingsCard } from "@/components";
 import { useBtcIndicators } from "@/hooks/useBtcIndicators";
-import { IndicatorSettingsUI } from "@/lib";
 import { DEFAULT_CONFIGS, IndicatorConfigs } from "@/utils";
 import { FieldSpec } from "@/types";
 type IndicatorKey = FieldSpec["key"];
@@ -96,54 +95,13 @@ function ChartContent() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {selectedKeys.map((k) => (
-                <div key={k} className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold">{k.toUpperCase()}</h4>
-                    <button
-                      onClick={() => removeSelected(k)}
-                      className="cursor-pointer px-2 py-1 text-sm border rounded bg-red-500 text-white font-semibold"
-                    >
-                      제거
-                    </button>
-                  </div>
-                  
-                  {IndicatorSettingsUI[k]?.({
-                    value: draft,
-                    onChange: setDraft,
-                  }) ?? (
-                    <div className="text-gray-500">
-                      이 지표는 별도 설정이 없습니다.
-                    </div>
-                  )}
-
-                  {k === "rsi" && (
-                    <div className="mt-3 text-right">
-                      <button
-                        className="cursor-pointer px-3 py-1 text-sm rounded font-semibold bg-black text-white"
-                        onClick={() =>
-                          setDraft((d) => ({ ...d, rsi: DEFAULT_CONFIGS.rsi }))
-                        }
-                      >
-                        RSI 기본값
-                      </button>
-                    </div>
-                  )}
-                  {k === "sigma" && (
-                    <div className="mt-3 text-right">
-                      <button
-                        className="cursor-pointer px-3 py-1 text-sm rounded font-semibold bg-black text-white"
-                        onClick={() =>
-                          setDraft((d) => ({
-                            ...d,
-                            sigma: DEFAULT_CONFIGS.sigma,
-                          }))
-                        }
-                      >
-                        σ 기본값
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <IndicatorSettingsCard
+                  key={k}
+                  keyName={k}
+                  configs={draft}
+                  onChange={setDraft}
+                  onRemove={removeSelected}
+                />
               ))}
             </div>
           </div>

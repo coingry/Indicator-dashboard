@@ -56,8 +56,7 @@ export const IndicatorSettingsUI: Record<
     return (
       <div className="grid gap-3">
         <div>
-          <label className="text-sm font-medium">기간(일)</label>
-          {/* 날짜 프리셋 사용 */}
+          <label className="text-sm font-medium">기간(일)</label> 
           <Select
             value={cfg.periodDays}
             onChange={(v) =>

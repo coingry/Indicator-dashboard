@@ -43,7 +43,6 @@ export function calculateIndicators(
   const alert = currentPrice > upper1 || currentPrice < lower1
 
   return {
-    currentPrice,
     sigma: sigmaPercent,
     sigmaAbsolute,
     upperBand: upper1,

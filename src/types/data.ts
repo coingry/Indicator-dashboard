@@ -25,7 +25,6 @@ export interface BTCData {
 }
 
 export interface IndicatorData {
-  currentPrice: number
   sigma: number
   sigmaAbsolute: number
   upperBand: number

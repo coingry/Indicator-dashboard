@@ -53,7 +53,5 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
           : undefined,
       };
     },
-    // 자동 갱신
-    // refetchInterval: 60000,
   });
 }
