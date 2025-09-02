@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BTCChart, IndicatorsPanel, LogPanel } from "@/components";
+import { BTCChart, IndicatorsPanel } from "@/components";
 import { useBtcIndicators } from "@/hooks/useBtcIndicators";
 import { IndicatorSettingsUI } from "@/lib";
 import { DEFAULT_CONFIGS, IndicatorConfigs } from "@/utils";
@@ -148,13 +148,6 @@ function ChartContent() {
             </div>
           </div>
         )}
-
-        {/* <div className="flex flex-1 basis-[30%] gap-6">
-          <div className="flex-1 bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">📝 활동 로그</h2>
-            <LogPanel />
-          </div>
-        </div> */}
       </div>
     </div>
   );
