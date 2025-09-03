@@ -1,7 +1,12 @@
 // hooks/useBtcIndicators.ts
 import { useQuery } from "@tanstack/react-query";
 import type { IndicatorData } from "@/types";
-import { DEFAULT_RESOLUTION, DEFAULT_PERIOD, type IndicatorConfigs } from "@/utils";
+import {
+  DEFAULT_RESOLUTION,
+  DEFAULT_PERIOD,
+  type IndicatorConfigs,
+} from "@/utils";
+import { OIBoxOutput, buildOIBoxData } from "@/lib/metric/oi";
 
 type IndicatorsResponse = {
   indicators: IndicatorData;
@@ -9,11 +14,9 @@ type IndicatorsResponse = {
 };
 
 export function useBtcIndicators(configs?: IndicatorConfigs) {
-  // σ 전용 설정값
   const sigmaPeriod = configs?.sigma?.periodDays ?? DEFAULT_PERIOD;
   const sigmaReso = configs?.sigma?.resolution ?? DEFAULT_RESOLUTION;
 
-  // RSI 전용 설정값
   const rsiReso = configs?.rsi?.resolution;
   const rsiPeriod = configs?.rsi?.period;
   const rsiOB = configs?.rsi?.overbought;
@@ -43,11 +46,25 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
 
       const res = await fetch(`/api/btc-data?${qs.toString()}`);
       if (!res.ok) throw new Error("데이터를 가져오는데 실패했습니다.");
-
       const result = await res.json();
       const indicators = result.data.indicators as IndicatorData;
+
+      const resOI = await fetch("/api/oi-data", { cache: "no-store" });
+      const oiResp = await resOI.json();
+
+      const oi: OIBoxOutput = buildOIBoxData({
+        openInterest: oiResp.curr,
+        prevOpenInterest: oiResp.prev,
+        price: oiResp.price,
+        upper: indicators.upperBand,
+        lower: indicators.lowerBand,
+      });
+
       return {
-        indicators,
+        indicators: {
+          ...indicators,
+          oi,
+        },
         lastUpdated: indicators?.lastUpdated
           ? new Date(indicators.lastUpdated).getTime()
           : undefined,

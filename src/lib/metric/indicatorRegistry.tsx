@@ -50,7 +50,7 @@ export const IndicatorSettingsUI: Record<
     onChange: (next: IndicatorConfigs) => void;
   }) => React.ReactNode
 > = {
-  // σ(표준편차): 기간(days) + 분봉
+  // σ(표준편차): 기간, 분봉
   sigma: ({ value, onChange }) => {
     const cfg = value.sigma ?? DEFAULT_CONFIGS.sigma!;
     return (
@@ -82,7 +82,7 @@ export const IndicatorSettingsUI: Record<
     );
   },
 
-  // RSI: period + 임계값
+  // RSI: 기간, 분봉, 매수/매도 임계값
   rsi: ({ value, onChange }) => {
     const cfg = value.rsi ?? DEFAULT_CONFIGS.rsi!;
     return (
@@ -146,14 +146,6 @@ export const IndicatorSettingsUI: Record<
     );
   },
 
-  // 아직 별도 설정이 없는 키들
-  sigmaAbsolute: () => null,
-  upperBand: () => null,
-  lowerBand: () => null,
-  position: () => null,
-  delta1D: () => null,
-  delta4H: () => null,
-  delta1H: () => null,
-  alert: () => null,
-  multiple: () => null,
+  // oi
+  oi: () => null,
 };

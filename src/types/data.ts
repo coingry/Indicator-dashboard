@@ -1,4 +1,4 @@
-// types/index.ts
+// types/data.ts
 export type Kline = [
   openTimeMs: number,
   open: string,
@@ -16,40 +16,60 @@ export type DBRow = {
   close: number;
 };
 export interface BTCData {
-  timestamp: number
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
+export interface OIBoxData {
+  openInterest: number;
+  oiDelta: number;
+  position: string;
+  state: "openStrong" | "closeStrong" | "neutral";
+}
+
+export type OIBoxInput = {
+  openInterest: number | null;
+  prevOpenInterest: number | null;
+  price: number;
+  upper: number;
+  lower: number;
+};
+
+export type LongShortPercent = {
+  longPct: number;
+  shortPct: number;
+};
+
+export type OIPositionState = "openStrong" | "closeStrong" | "neutral";
+
+export type OIBoxOutput = {
+  openInterest: number;
+  oiDelta: number;
+  state: OIPositionState;
+  position: string;
+  bias: number;
+  band: {
+    nearUpper: boolean;
+    nearLower: boolean;
+    mid: boolean;
+    upper: number;
+    lower: number;
+    price: number;
+  };
+};
 export interface IndicatorData {
-  sigma: number
-  sigmaAbsolute: number
-  upperBand: number
-  lowerBand: number
-  period: number
-  lastUpdated: string
-  // 추가 지표들
-  upper2?: number
-  lower2?: number
-  upper3?: number
-  lower3?: number
-  multiple?: number | null
-  alert?: boolean
-  prevClose?: number
-  // RSI
-  rsi?: number | null
-  // 시간대별 변동률
-  delta1H?: number | null
-  delta4H?: number | null
-  delta1D?: number | null
-  // 포지션 분석
-  position?: string
-  nearUpper?: boolean
-  nearLower?: boolean
-  bias?: number
+  currentPrice?: number;
+  sigma: number;
+  rsi?: number | null;
+  oi?: OIBoxData | null;
+  upperBand: number;
+  lowerBand: number;
+  period: number;
+  lastUpdated: string;
 }
 
 export type BTCRow = Omit<BTCData, "volume"> & { volume?: number };

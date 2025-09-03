@@ -2,16 +2,8 @@
 import type { IndicatorData } from "@/types";
 export type FieldKey =
   | "sigma"
-  | "sigmaAbsolute"
-  | "upperBand"
-  | "lowerBand"
   | "rsi"
-  | "position"
-  | "delta1D"
-  | "delta4H"
-  | "delta1H"
-  | "alert"
-  | "multiple";
+  | "oi";
 
 export type FieldSpec = {
   key: FieldKey;

@@ -14,7 +14,6 @@ export function aggregateToResolution(data: BTCData[], interval: number): BTCDat
       existing.high = Math.max(existing.high, row.high);
       existing.low = Math.min(existing.low, row.low);
       existing.close = row.close;
-      // volume 등은 필요시 합산 처리 가능
     }
   }
 

@@ -34,7 +34,9 @@ export default function IndicatorSettingsCard({
       </div>
 
       {settingUI ?? (
-        <div className="text-gray-500">이 지표는 별도 설정이 없습니다.</div>
+        <div className="text-gray-500 text-center">
+          이 지표는 별도 설정이 없습니다.
+        </div>
       )}
 
       {keyName === "rsi" && (
@@ -64,6 +66,21 @@ export default function IndicatorSettingsCard({
             }
           >
             σ 기본값
+          </button>
+        </div>
+      )}
+      {keyName === "oi" && (
+        <div className="mt-3 text-right">
+          <button
+            className="cursor-pointer px-3 py-1 text-sm rounded font-semibold bg-black text-white"
+            onClick={() =>
+              onChange({
+                ...configs,
+                // oi: DEFAULT_CONFIGS.,
+              })
+            }
+          >
+            oi 기본값
           </button>
         </div>
       )}

@@ -1,11 +1,13 @@
 // utils/config.ts
 
+// 기간 설정
 export const DATE_SELECT_OPTIONS = [
   { label: '30일', value: 30 },
   { label: '60일', value: 60 },
   { label: '90일', value: 90 },
 ]
 
+// 분봉 설정
 export const RESOLUTION_TO_SECONDS: Record<string, number> = {
   "1m": 60,
   "5m": 300,
@@ -19,6 +21,7 @@ export const DEFAULT_RESOLUTION = "1m";
 export const DEFAULT_PERIOD = "30";
 export const ALLOWED_RESOLUTIONS = Object.keys(RESOLUTION_TO_SECONDS);
 
+// Rsi 설정
 export const RSI_PERIOD = 14;
 export const RSI_OVERBOUGHT = 60.0;
 export const RSI_OVERSOLD  = 40.0;
@@ -46,3 +49,13 @@ export const DEFAULT_CONFIGS: IndicatorConfigs = {
     oversold: RSI_OVERSOLD,
   },
 };
+
+// oi data 설정
+export const FAPI_BASE = 'https://fapi.binance.com'
+export const SYMBOL = 'BTCUSDT'
+export const OI_RAW_MIN = 0.05
+export const OI_STALE_MAX_MIN = 7 
+export const OI_DISPLAY_MIN = 0.30
+export const OI_OPEN_STRONG = 0.80
+export const OI_CLOSE_STRONG = -0.50
+export const NEAR_BAND = 0.3

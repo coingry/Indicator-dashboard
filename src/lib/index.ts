@@ -7,7 +7,7 @@ export * from './metric/indicatorRegistry'
 export * from './metric/sigma'
 export * from './metric/aggregate'
 export * from './metric/rsi'
+export * from './metric/oi'
 
 // api 관련 함수들
 export * from './api/btc-server'
-export * from './binance'

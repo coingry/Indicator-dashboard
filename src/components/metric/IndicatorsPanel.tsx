@@ -28,6 +28,7 @@ export default function IndicatorsPanel({
     }
     return base;
   };
+  console.log("💡 indicators", indicators);
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">

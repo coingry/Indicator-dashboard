@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "지표 관리 프로그램",
+  title: "BTCUSDT dashboard",
   description: "지표 테스트용 관리 프로그램",
 };
 export default function RootLayout({
