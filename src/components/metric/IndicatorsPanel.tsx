@@ -28,7 +28,7 @@ export default function IndicatorsPanel({
     }
     return base;
   };
-  console.log("💡 indicators", indicators);
+  // console.log("💡 indicators", indicators);
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
@@ -47,10 +47,10 @@ export default function IndicatorsPanel({
               <button
                 key={f.key}
                 type="button"
-                className="cursor-pointer h-full"
+                className="cursor-pointer h-full min-h-[110px]"
                 onClick={() => onSelectIndicator?.(f.key)}
               >
-                <MetricCard label={label} value={val} sub={sub} />
+                <MetricCard label={label} value={val} sub={sub} cardKey={f.key} />
               </button>
             );
           })}

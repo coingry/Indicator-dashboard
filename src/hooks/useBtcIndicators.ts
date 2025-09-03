@@ -1,12 +1,12 @@
 // hooks/useBtcIndicators.ts
 import { useQuery } from "@tanstack/react-query";
-import type { IndicatorData } from "@/types";
+import type { IndicatorData, OIBoxOutput } from "@/types";
 import {
   DEFAULT_RESOLUTION,
   DEFAULT_PERIOD,
   type IndicatorConfigs,
 } from "@/utils";
-import { OIBoxOutput, buildOIBoxData } from "@/lib/metric/oi";
+import { buildOIBoxData } from "@/lib";
 
 type IndicatorsResponse = {
   indicators: IndicatorData;
@@ -56,6 +56,7 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
         openInterest: oiResp.curr,
         prevOpenInterest: oiResp.prev,
         price: oiResp.price,
+        priceDelta: oiResp.price1mDelta,
         upper: indicators.upperBand,
         lower: indicators.lowerBand,
       });
@@ -70,5 +71,6 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
           : undefined,
       };
     },
+    // refetchInterval: 60 * 1000,
   });
 }

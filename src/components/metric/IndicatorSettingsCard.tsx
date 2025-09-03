@@ -22,7 +22,7 @@ export default function IndicatorSettingsCard({
   });
 
   return (
-    <div className="flex flex-col justify-between bg-gray-50 rounded-lg p-4">
+    <div className="flex flex-col justify-between bg-gray-50 rounded-lg p-4 min-h-[350px]">
       <div className="flex items-center justify-between mb-3">
         <h4 className="font-semibold">{keyName.toUpperCase()}</h4>
         <button

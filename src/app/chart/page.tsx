@@ -38,9 +38,9 @@ function ChartContent() {
             <BTCChart />
           </div>
 
-          <div className="w-[25%] bg-white shadow-lg p-6 flex flex-col">
+          <div className="w-[25%] bg-white shadow-lg p-4 flex flex-col">
             <div className="flex items-center justify-between mb-4 border-b-2">
-              <h2 className="text-xl font-semibold text-gray-800">지표 정보</h2>
+              <h2 className="text-xl font-bold text-gray-800">지표 정보</h2>
               {data?.lastUpdated && (
                 <div className="flex flex-col text-right text-sm text-gray-700">
                   <p>마지막 업데이트</p>

@@ -5,6 +5,7 @@ type MetricCardProps = {
   value: string | number | null | undefined;
   sub?: string;
   badge?: string;
+  cardKey?: string;
 };
 
 export default function MetricCard({
@@ -12,6 +13,7 @@ export default function MetricCard({
   value,
   sub,
   badge,
+  cardKey,
 }: MetricCardProps) {
   return (
     <div className="flex flex-col justify-between bg-white text-black p-4 rounded-lg shadow-md h-full">
@@ -24,10 +26,19 @@ export default function MetricCard({
         )}
       </div>
 
-      <div className="mt-1 text-2xl font-bold tabular-nums">
+      <div
+        className={`mt-1 font-bold tabular-nums ${
+          cardKey === "oi" ? "text-sm" : "text-xl"
+        }`}
+      >
         {value ?? "N/A"}
       </div>
-      {sub && <div className="mt-1 text-xs opacity-90">{sub}</div>}
+      {sub && (
+        <div
+          className="mt-1 text-xs opacity-90 leading-snug"
+          dangerouslySetInnerHTML={{ __html: sub }}
+        />
+      )}
     </div>
   );
 }
