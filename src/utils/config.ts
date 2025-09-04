@@ -1,38 +1,56 @@
-// config.ts
-import type { Resolution } from "@/types";
+// utils/config.ts
 
+// 기간 설정
 export const DATE_SELECT_OPTIONS = [
   { label: '30일', value: 30 },
   { label: '60일', value: 60 },
   { label: '90일', value: 90 },
 ]
 
-export const CANDLE_RESOLUTIONS = {
+// 분봉 설정
+export const RESOLUTION_TO_SECONDS: Record<string, number> = {
   "1m": 60,
-  "5m": 5 * 60,
-  "15m": 15 * 60,
-  "30m": 30 * 60,
-  "1h": 60 * 60,
-  "4h": 4 * 60 * 60,
-  "12h": 12 * 60 * 60,
-  "1d": 24 * 60 * 60,
-  "1w": 7 * 24 * 60 * 60,
-  "1M": 30 * 24 * 60 * 60,
-} satisfies Record<Resolution, number>;
+  "5m": 300,
+  "15m": 900,
+  "1h": 3600,
+  "4h": 14400,
+  "1d": 86400,
+};
 
-export const CANDLE_LABELS = {
-  "1m": "1분",
-  "5m": "5분",
-  "15m": "15분",
-  "30m": "30분",
-  "1h": "1시간",
-  "4h": "4시간",
-  "12h": "12시간",
-  "1d": "1일",
-  "1w": "1주",
-  "1M": "1달",
-} satisfies Record<Resolution, string>;
+export const DEFAULT_RESOLUTION = "1m";
+export const DEFAULT_PERIOD = "30";
+export const ALLOWED_RESOLUTIONS = Object.keys(RESOLUTION_TO_SECONDS);
 
-export const RESOLUTION_ORDER = [
-  "1m", "5m", "15m", "30m", "1h", "4h", "12h", "1d", "1w", "1M",
-] as const satisfies readonly Resolution[];
+// Rsi 설정
+export const RSI_PERIOD = 14;
+export const RSI_OVERBOUGHT = 60.0;
+export const RSI_OVERSOLD  = 40.0;
+
+// 지표별 설정 타입
+export type IndicatorConfigs = Partial<{
+  sigma: {
+    periodDays: number;
+    resolution: string;
+  };
+  rsi: {
+    resolution: string;
+    period: number;
+    overbought: number;
+    oversold: number;
+  };
+}>;
+
+export const DEFAULT_CONFIGS: IndicatorConfigs = {
+  sigma: { periodDays: 30, resolution: DEFAULT_RESOLUTION },
+  rsi: {
+    resolution: DEFAULT_RESOLUTION,
+    period: RSI_PERIOD,
+    overbought: RSI_OVERBOUGHT,
+    oversold: RSI_OVERSOLD,
+  },
+};
+
+// oi data 설정
+export const FAPI_BASE = 'https://fapi.binance.com'
+export const SYMBOL = 'BTCUSDT'
+export const OI_RAW_MIN = 0.05

@@ -127,6 +127,8 @@ function connect() {
       const k = msg?.k;
       if (!k || !k.x) return;
 
+      console.log("[WS] new closed candle", k.t);
+
       const row: KlineRow = {
         timestamp: Math.floor(k.t / 1000),
         open: Number(k.o),
