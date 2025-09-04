@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { FAPI_BASE, SYMBOL } from "@/utils";
 import { supabase } from "@/lib/api/supabase/server";
 
-export const runtime = 'nodejs';
-export const preferredRegion = ['icn1', 'hnd1', 'sin1'];
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const preferredRegion = ["icn1", "hnd1", "sin1"];
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
@@ -30,10 +30,13 @@ export async function GET(req: NextRequest) {
     //   );
     // }
     if (!response.ok) {
-  const text = await response.text();
-  console.error("Upstream error:", response.status, text.slice(0, 300));
-  return NextResponse.json({ success: false, status: response.status, error: text.slice(0, 300) }, { status: 502 });
-}
+      const text = await response.text();
+      console.error("Upstream error:", response.status, text.slice(0, 300));
+      return NextResponse.json(
+        { success: false, status: response.status, error: text.slice(0, 300) },
+        { status: 502 }
+      );
+    }
 
     const data = await response.json();
     if (!Array.isArray(data) || data.length < 2) {
