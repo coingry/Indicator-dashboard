@@ -29,6 +29,6 @@ export function useOIBox() {
         lastUpdated: Date.now(),
       };
     },
-    refetchInterval: 30 * 1000,
+    refetchInterval: 15 * 1000,
   });
 }

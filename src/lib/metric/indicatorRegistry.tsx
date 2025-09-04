@@ -54,7 +54,7 @@ export const IndicatorSettingsUI: Record<
   sigma: ({ value, onChange }) => {
     const cfg = value.sigma ?? DEFAULT_CONFIGS.sigma!;
     return (
-      <div className="grid gap-3">
+      <div className="grid gap-3 text-white">
         <div>
           <label className="text-sm font-medium">기간(일)</label> 
           <Select
@@ -86,7 +86,7 @@ export const IndicatorSettingsUI: Record<
   rsi: ({ value, onChange }) => {
     const cfg = value.rsi ?? DEFAULT_CONFIGS.rsi!;
     return (
-      <div className="grid gap-3">
+      <div className="grid gap-3 text-white">
         <div>
           <label className="text-sm font-medium">RSI 분봉</label>
           <Select
