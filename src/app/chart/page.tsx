@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BTCChart, IndicatorsPanel, IndicatorSettingsCard } from "@/components";
-import { useBtcIndicators } from "@/hooks/useBtcIndicators";
+import { useCombinedIndicators } from "@/hooks/useCombinedIndicators";
 import { DEFAULT_CONFIGS, IndicatorConfigs } from "@/utils";
 import { FieldSpec } from "@/types";
 type IndicatorKey = FieldSpec["key"];
@@ -28,7 +28,7 @@ function ChartContent() {
     setConfigs(draft);
   };
 
-  const { data, isLoading, error, refetch } = useBtcIndicators(configs);
+  const { data, isLoading, error, refetch } = useCombinedIndicators(configs);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
