@@ -1,5 +1,5 @@
 // lib/api/btc-server.ts
-import { supabase } from "@/lib/supabase/server";
+import { supabase } from "@/lib/api/supabase/server";
 import type { BTCData } from "@/types";
 
 const PAGE_SIZE = 1000;

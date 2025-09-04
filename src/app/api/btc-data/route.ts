@@ -4,7 +4,6 @@ import {
   calculateIndicators,
   computeSigma,
   aggregateToResolution,
-  fetchRangeBTCData,
   calculateRSI,
 } from "@/lib";
 import {
@@ -12,6 +11,7 @@ import {
   DEFAULT_RESOLUTION,
   RSI_PERIOD,
 } from "@/utils";
+import { fetchRangeBTCData } from "@/lib/api/btc-server"
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

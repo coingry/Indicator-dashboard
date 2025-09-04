@@ -1,6 +1,6 @@
 // app/api/init/route.ts
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase/server";
+import { supabase } from "@/lib/api/supabase/server";
 import type { Kline, DBRow } from "@/types";
 
 export const runtime = "nodejs";

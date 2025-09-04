@@ -1,7 +1,7 @@
 // api/oi-data/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { FAPI_BASE, SYMBOL } from "@/utils";
-import { supabase } from "@/lib/supabase/server";
+import { supabase } from "@/lib/api/supabase/server";
 
 export async function GET(req: NextRequest) {
   try {
