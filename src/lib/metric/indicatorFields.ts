@@ -1,5 +1,5 @@
 // lib/indicatorFields.ts ⚫️
-import type { FieldSpec } from "@/types";
+import type { FieldSpec, IndicatorData } from "@/types";
 import { RSI_OVERBOUGHT, RSI_OVERSOLD } from "@/utils";
 import { fPercent, fFixed } from "@/utils/formatter";
 
@@ -24,11 +24,43 @@ const oiBadge = (state: string) => {
   }
 };
 
+function formatSigmaLine1(d: IndicatorData) {
+  const sv = d.sigmaView;
+  if (!sv) return null;
+  return `표준편차(σ) ${sv.sigma.toFixed(4)}%`;
+}
+
+function formatSigmaState(d: IndicatorData): string | undefined {
+  const sv = d.sigmaView;
+  if (!sv) return undefined;
+  const s = sv.state;
+
+  switch (s.type) {
+    case "UPPER_BREAK":
+      return `상단밴드 돌파 (+${s.beyond.toFixed(2)}σ)`;
+    case "LOWER_BREAK":
+      return `하단밴드 이탈 (−${s.beyond.toFixed(2)}σ)`;
+    case "INSIDE":
+      return `Band 내 · 상단밴드까지 (${s.toUpper.toFixed(
+        2
+      )}σ) · 하단밴드까지 (${s.toLower.toFixed(2)}σ)`;
+    default:
+      return "";
+  }
+}
+
 export const EXTENDED_FIELDS: FieldSpec[] = [
   {
     key: "sigma",
-    label: "σ (표준편차)",
-    getValue: (d) => (d.sigma != null ? `${d.sigma.toFixed(4)}%` : null),
+    label: "Volatility View (표준편차)",
+    getValue: (d) => {
+      if (!d.sigmaView) return null;
+      return formatSigmaLine1(d);
+    },
+    getSub: (d) => {
+      if (!d.sigmaView) return undefined;
+      return formatSigmaState(d);
+    },
   },
   {
     key: "rsi",

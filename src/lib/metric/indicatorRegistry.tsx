@@ -3,6 +3,7 @@ import React from "react";
 import type { FieldSpec } from "@/types";
 import {
   DATE_SELECT_OPTIONS,
+  NUMBER_SELECT_OPTIONS,
   RESOLUTION_TO_SECONDS,
   DEFAULT_CONFIGS,
 } from "@/utils";
@@ -13,29 +14,27 @@ const RESOLUTION_SELECT_OPTIONS = Object.keys(RESOLUTION_TO_SECONDS).map(
   (key) => ({ value: key, label: key.toUpperCase() })
 );
 
-function Select({
+function Select<T extends string | number>({
   value,
   onChange,
   options,
 }: {
-  value: string | number;
-  onChange: (v: string | number) => void;
-  options: { value: string | number; label: string }[];
+  value: T;
+  onChange: (v: T) => void;
+  options: { value: T; label: string }[];
 }) {
   return (
     <select
       className="mt-1 w-full border rounded px-2 py-1"
-      value={value}
+      value={String(value)}
       onChange={(e) =>
         onChange(
-          isNaN(Number(e.target.value))
-            ? e.target.value
-            : Number(e.target.value)
+          options.find((opt) => String(opt.value) === e.target.value)!.value
         )
       }
     >
       {options.map((opt) => (
-        <option key={String(opt.value)} value={opt.value}>
+        <option key={String(opt.value)} value={String(opt.value)}>
           {opt.label}
         </option>
       ))}
@@ -50,13 +49,13 @@ export const IndicatorSettingsUI: Record<
     onChange: (next: IndicatorConfigs) => void;
   }) => React.ReactNode
 > = {
-  // σ(표준편차): 기간, 분봉
+  // σ(표준편차): 기간, 분봉, 개수
   sigma: ({ value, onChange }) => {
     const cfg = value.sigma ?? DEFAULT_CONFIGS.sigma!;
     return (
       <div className="grid gap-3 text-white">
         <div>
-          <label className="text-sm font-medium">기간(일)</label> 
+          <label className="text-sm font-medium">기간(일)</label>
           <Select
             value={cfg.periodDays}
             onChange={(v) =>
@@ -76,6 +75,22 @@ export const IndicatorSettingsUI: Record<
               onChange({ ...value, sigma: { ...cfg, resolution: String(v) } })
             }
             options={RESOLUTION_SELECT_OPTIONS}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium">봉 개수</label>
+          <Select<"ALL" | number>
+            value={cfg.window === undefined ? "ALL" : cfg.window}
+            onChange={(v) =>
+              onChange({
+                ...value,
+                sigma: {
+                  ...cfg,
+                  window: v === "ALL" ? undefined : Number(v),
+                },
+              })
+            }
+            options={NUMBER_SELECT_OPTIONS}
           />
         </div>
       </div>

@@ -15,6 +15,7 @@ type IndicatorsResponse = {
 export function useBtcIndicators(configs?: IndicatorConfigs) {
   const sigmaPeriod = configs?.sigma?.periodDays ?? DEFAULT_PERIOD;
   const sigmaReso = configs?.sigma?.resolution ?? DEFAULT_RESOLUTION;
+  const sigmaWindow = configs?.sigma?.window;
 
   const rsiReso = configs?.rsi?.resolution;
   const rsiPeriod = configs?.rsi?.period;
@@ -25,6 +26,7 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
     "btc-indicators",
     sigmaPeriod,
     sigmaReso,
+    sigmaWindow ?? "ALL",
     rsiReso,
     rsiPeriod,
     rsiOB,
@@ -38,6 +40,11 @@ export function useBtcIndicators(configs?: IndicatorConfigs) {
         period: String(sigmaPeriod),
         resolution: sigmaReso,
       });
+      if (sigmaWindow === undefined) {
+        qs.set("window", "ALL");
+      } else {
+        qs.set("window", String(sigmaWindow));
+      }
       if (rsiReso) qs.set("rsiResolution", rsiReso);
       if (rsiPeriod != null) qs.set("rsiPeriod", String(rsiPeriod));
       if (rsiOB != null) qs.set("rsiOB", String(rsiOB));

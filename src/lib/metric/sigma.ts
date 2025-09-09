@@ -1,29 +1,36 @@
-// lib/metric/sigma.ts - 1분봉도 설정에 추가
+// lib/metric/sigma.ts
 import type { BTCData } from "@/types";
 
-export function computeSigma(data: BTCData[]): number {
-  if (data.length < 2) {
-    throw new Error(
-      "표준편차 계산을 위해서는 최소 2개 이상의 데이터가 필요합니다."
-    );
+/**
+ * 최근 window개의 로그수익률로 표준편차(σ, 비율)를 계산.
+ * data는 과거→현재 오름차순이라 가정.
+ */
+export function computeSigma(data: BTCData[], window?: number): number {
+  const nReturns = data.length - 1; // 전체 로그수익률 개수
+
+  if (nReturns < 1) {
+    throw new Error("표준편차 계산에는 최소 2개 봉이 필요합니다.");
   }
 
-  // 로그 수익률 계산: ln(close_price / previous_close_price)
+  // window=undefined면 전체 구간을 사용
+  const effectiveWindow = window ?? nReturns;
+
+  if (effectiveWindow < 1) {
+    throw new Error(`window=${effectiveWindow}가 유효하지 않습니다.`);
+  }
+
+  const tail = data.slice(-(effectiveWindow + 1));
   const logReturns: number[] = [];
-  for (let i = 1; i < data.length; i++) {
-    const logReturn = Math.log(data[i].close / data[i - 1].close);
-    logReturns.push(logReturn);
+
+  for (let i = 1; i < tail.length; i++) {
+    const r = Math.log(tail[i].close / tail[i - 1].close);
+    logReturns.push(r);
   }
 
-  // 평균 계산
   const mean =
-    logReturns.reduce((sum, ret) => sum + ret, 0) / logReturns.length;
-
-  // 분산 계산
+    logReturns.reduce((sum, x) => sum + x, 0) / logReturns.length;
   const variance =
-    logReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) /
-    logReturns.length;
+    logReturns.reduce((s, x) => s + (x - mean) ** 2, 0) / (logReturns.length - 1);
 
-  // 표준편차 = √분산
   return Math.sqrt(variance);
 }
